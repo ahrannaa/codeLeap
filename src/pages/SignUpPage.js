@@ -57,6 +57,7 @@ const ModalTitle = styled.h2`
 const ModalSubTitle = styled.h2`
   font-family: 'Roboto', sans-serif;
   color: #000000;
+  margin-top: 10px;
   font-size: 16px;
   font-weight: 400;
   display: flex;
