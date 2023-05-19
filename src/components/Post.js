@@ -1,7 +1,15 @@
+import { useState } from "react";
 import styled from "styled-components";
 import Modal from '../components/Modal'
 
 export default function Post(props) {
+  const [openEditModal, setOpenEditModal] = useState("false")
+  const [openRemoveModal, setOpenRemoveModal] = useState("false")
+  const [post, setPost] = useState({
+    title: "",
+    content: "",
+  })
+
 
   return (
     <Box>
@@ -9,28 +17,34 @@ export default function Post(props) {
         <p>{props.title}</p>
         <div>
           {
-            props.canRemove === "true" ? <ion-icon name="trash-bin-outline" onClick={props.onRemove}></ion-icon> : <></>
+            props.canRemove === "true" ? <ion-icon onClick={() => { setOpenRemoveModal("true") }} name="trash-bin-outline"></ion-icon> : <></>
           }
           {
-            props.canEdit === "true" ? <ion-icon onClick={() => { }} name="create-outline"></ion-icon> : <></>
+            props.canEdit === "true" ? <ion-icon onClick={() => { setOpenEditModal("true") }} name="create-outline"></ion-icon> : <></>
           }
-          <Modal isOpen="false">
-            <Info>Edit item</Info>
+          <Modal isOpen={openEditModal} title="Edit item">
             <InputWrapper>
               <Label>Title</Label>
               <TitleInput
+                onChange={e => setPost({ ...post, title: e.target.value })}
                 required
-                name="Name"
+                name="title"
                 placeholder="Hello World" />
               <Label>Content</Label>
               <ContentInput
+                onChange={e => setPost({ ...post, content: e.target.value })}
                 required
-                name="Name"
+                name="content"
                 placeholder="Content Here" />
             </InputWrapper>
             <BoxButton>
-              <Button>Create</Button>
-              <Button>Create</Button>
+              <Button>Cancel</Button>
+              <Button onClick={() => props.onEdit(props.postId, post)}>Save</Button>
+            </BoxButton>
+          </Modal>
+          <Modal isOpen={openRemoveModal} title="Remove item">
+            <BoxButton>
+              <Button>Remove</Button>
             </BoxButton>
           </Modal>
         </div>
@@ -109,13 +123,6 @@ const Content = styled.p`
  margin-left:10px;
  margin-right:10px;
 `;
-
-const Info = styled.h1`
- font-family: 'Roboto';
- font-style: normal;
- font-weight: 700;
- font-size: 22px;
-`
 const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -152,12 +159,12 @@ const BoxButton = styled.div`
 const Button = styled.button`
   width: 120px;
   height: 32px;
-  background: #7695EC;
+  background: #FFFFFF;
   border-radius: 8px;
-  border: none;
+  border: border: 1px solid #000000;
   margin-top: 10px;
   margin-right: 10px;
-  color: #FFFFFF;
+  color: #000000;
   font-family: 'Roboto', sans-serif;
   font-weight: 700;
   font-size: 16px;
