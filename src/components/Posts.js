@@ -5,8 +5,9 @@ import { useSelector } from "react-redux";
 import { selectUser } from '../redux/userSlice'
 
 
-export default function Posts() {
+export default function Posts(props) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [postReceived, setPostReceived] = useState(false);
   const { name } = useSelector(selectUser)
 
   function openModal() {

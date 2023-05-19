@@ -3,13 +3,16 @@ import { useState } from 'react'
 import Modal from '../components/Modal'
 import { useDispatch } from "react-redux"
 import { signup } from '../redux/userSlice'
+import { useNavigate } from "react-router-dom"
 
 export default function SignUpPage() {
   const [username, setUsername] = useState('')
   const dispatcher = useDispatch()
+  let navigate = useNavigate();
 
   function modalOnClik() {
     dispatcher(signup(username))
+    navigate('/')
   }
 
   return (
