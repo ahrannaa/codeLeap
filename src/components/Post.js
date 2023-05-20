@@ -1,6 +1,28 @@
 import { useState } from "react";
 import styled from "styled-components";
 import Modal from '../components/Modal'
+import dayjs from 'dayjs';
+import updateLocale from 'dayjs/plugin/updateLocale';
+import 'dayjs/locale/en'
+
+dayjs.extend(updateLocale);
+dayjs.updateLocale('en', {
+  relativeTime: {
+    future: "in %s",
+    past: "%s ago",
+    s: 'a few seconds',
+    m: "a minute",
+    mm: "%d minutes",
+    h: "1 hour",
+    hh: "%d hours",
+    d: "a day",
+    dd: "%d days",
+    M: "a month",
+    MM: "%d months",
+    y: "a year",
+    yy: "%d years"
+  }
+});
 
 export default function Post(props) {
   const [openEditModal, setOpenEditModal] = useState("false")
@@ -10,10 +32,13 @@ export default function Post(props) {
     content: "",
   })
 
+  function formatDate(createdAt) {
+    return dayjs(createdAt).fromNow()
+  }
+
   function isNotBlank(value) {
     return value.trim() !== ""
   }
-
   async function submitEdit(e) {
     e.preventDefault()
     if (isNotBlank(post.title) && isNotBlank(post.content)) {
@@ -76,7 +101,7 @@ export default function Post(props) {
       </HeaderLayout>
       <Infos>
         <Name>@{props.username}</Name>
-        <Date>{props.createdAt}</Date>
+        <Date>{formatDate(props.createdAt)}</Date>
       </Infos>
       <Content>{props.content}</Content>
     </Box>
