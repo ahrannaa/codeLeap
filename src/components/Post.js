@@ -10,7 +10,14 @@ export default function Post(props) {
     content: "",
   })
 
-
+  async function edit() {
+    try {
+      await props.onEdit(props.postId, post)
+      setOpenEditModal("false")
+    } catch (error) {
+      throw error
+    }
+  }
   return (
     <Box>
       <HeaderLayout>
@@ -38,13 +45,14 @@ export default function Post(props) {
                 placeholder="Content Here" />
             </InputWrapper>
             <BoxButton>
-              <Button>Cancel</Button>
-              <Button onClick={() => props.onEdit(props.postId, post)}>Save</Button>
+              <ButtonRed onClick={() => { setOpenEditModal("false") }}>Cancel</ButtonRed>
+              <ButtonGreen onClick={edit}>Save</ButtonGreen>
             </BoxButton>
           </Modal>
-          <Modal isOpen={openRemoveModal} title="Remove item">
+          <Modal isOpen={openRemoveModal} title="Are you sure you want to delete this item? ">
             <BoxButton>
-              <Button>Remove</Button>
+              <ButtonGreen onClick={() => {setOpenRemoveModal("false") }}>Cancel</ButtonGreen>
+              <ButtonRed>Delete</ButtonRed>
             </BoxButton>
           </Modal>
         </div>
@@ -68,7 +76,7 @@ const Box = styled.div`
  border: 1px solid #999999;
  border-radius: 16px;
  box-sizing: border-box;
-`;
+`
 const HeaderLayout = styled.div`
   width:752px;
   height:70px;
@@ -95,25 +103,25 @@ const HeaderLayout = styled.div`
       margin-right:20px;
       text-align:center;
     }
-`;
+`
 const Infos = styled.div`
  display: flex;
  justify-content: space-between;
-`;
+`
 const Paragraph = styled.p`
  font-family: 'Roboto';
  font-size: 18px;
  font-style: normal;
  color: #777777;
-`;
+`
 const Name = styled(Paragraph)`
   margin-left:10px;
   font-weight: 700;
-`;
+`
 const Date = styled(Paragraph)`
   margin-right:10px;
   font-weight: 400;
-`;
+`
 const Content = styled.p`
  font-family: 'Roboto';
  font-style: normal;
@@ -122,12 +130,12 @@ const Content = styled.p`
  line-height: 21px;
  margin-left:10px;
  margin-right:10px;
-`;
+`
 const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
-`;
+`
 const Label = styled.label`
   font-family: 'Roboto', sans-serif;
   font-style: normal;
@@ -135,23 +143,22 @@ const Label = styled.label`
   font-size: 16px;
   margin-top: 10px;
   margin-bottom: 10px;
-  margin-left: 20px;
-`;
+`
 const Input = styled.input`
   background: #FFFFFF;
   border: 1px solid #777777;
   border-radius: 8px; 
   margin-left: auto;
   margin-right: auto;
-`;
+`
 const TitleInput = styled(Input)`
   width: 612px;
   height: 32px;
-`;
+`
 const ContentInput = styled(Input)`
  width: 612px;
  height: 74px;
-`;
+`
 const BoxButton = styled.div`
   display: flex;
   justify-content:end;
@@ -168,4 +175,22 @@ const Button = styled.button`
   font-family: 'Roboto', sans-serif;
   font-weight: 700;
   font-size: 16px;
-`;
+`
+const ButtonRed = styled(Button)`
+ &:hover {
+  color:#FFFFFF;
+  background:#FF5151;
+  border: none;
+  cursor: pointer;
+  transform: scale(1.1)
+ }
+`
+const ButtonGreen = styled(Button)`
+ &:hover {
+  color:#FFFFFF;
+  background:#47B960;
+  border: none;
+  cursor: pointer;
+  transform: scale(1.1)
+ }
+`

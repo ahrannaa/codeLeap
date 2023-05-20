@@ -24,8 +24,13 @@ export default function MainPage() {
   }
 
   async function editPost(id, post) {
+    const body = {
+      title: post.title,
+      content: post.content
+    }
+
     try {
-      await axios.patch(`${CODELAP_URL}${id}/`);
+      await axios.patch(`${CODELAP_URL}${id}/`, body );
       await getPosts()
     } catch (err) {
       console.log("error when editing post", err)
@@ -39,12 +44,13 @@ export default function MainPage() {
       {
         posts.map((post) => (
           <Post
+            key={post.id}
             postId={post.id}
             username={post.username}
             title={post.title}
             content={post.content}
             createdAt={post.created_datetime}
-            canRemove={post.username === name ? "true" : "false"}
+            canRemove={post.username === name ? "true" : "true"}
             canEdit={post.username === name ? "true" : "false"}
             onEdit={editPost}
           />

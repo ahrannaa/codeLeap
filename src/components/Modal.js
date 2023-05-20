@@ -2,6 +2,8 @@ import React from 'react';
 import ReactModal from "react-modal";
 import styled from "styled-components"
 
+ReactModal.setAppElement('#root');
+
 export default function Modal(props) {
   const isOpen = props.isOpen === "true"
   return (
@@ -9,10 +11,9 @@ export default function Modal(props) {
       isOpen={isOpen}
       style={{
         content: {
-          width: "500px",
           background: " #FFFFFF",
           borderRadius: "16px",
-          borderSizing: "border-box;",
+          borderSizing: "border-box",
           top: "50%",
           left: "50%",
           right: "auto",
