@@ -10,8 +10,8 @@ export default function Post(props) {
   const [openEditModal, setOpenEditModal] = useState("false")
   const [openRemoveModal, setOpenRemoveModal] = useState("false")
   const [post, setPost] = useState({
-    title: "",
-    content: "",
+    title: props.title,
+    content: props.content,
   })
 
   function formatDate(createdAt) {
@@ -56,12 +56,14 @@ export default function Post(props) {
               <InputWrapper>
                 <Label>Title</Label>
                 <TitleInput
+                  value={post.title}
                   onChange={e => setPost({ ...post, title: e.target.value })}
                   required
                   name="title"
                   placeholder="Hello World" />
                 <Label>Content</Label>
                 <ContentInput
+                  value={post.content}
                   onChange={e => setPost({ ...post, content: e.target.value })}
                   required
                   name="content"
