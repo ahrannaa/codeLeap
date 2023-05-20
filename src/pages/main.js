@@ -1,26 +1,36 @@
 import Header from "../components/Header";
-import Post from "../components/Post";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { selectUser } from '../redux/userSlice'
 import PostForm from "../components/PostForm";
+import Timeline from "../components/Timeline";
+import { merge } from "../utils/utils"
 
 const CODELAP_URL = "https://dev.codeleap.co.uk/careers/"
+const POSTS_LIMIT = 10
 
 export default function MainPage() {
   const [posts, setPosts] = useState([])
+  const [next, setNext] = useState('')
   const { username } = useSelector(selectUser)
 
   useEffect(() => {
-    getPosts()
-      .then(() => { })
-      .catch((err) => console.log("error when getting posts", err))
-  }, []);
+    fetchPosts()
+  }, [])
 
-  async function getPosts() {
-    const response = await axios.get(CODELAP_URL)
-    setPosts(response.data.results)
+  async function fetchPosts() {
+    const response = await axios.get(`${CODELAP_URL}?limit=${POSTS_LIMIT}`)
+    const data = response.data
+    setPosts(data.results)
+    setNext(data.next)
+  }
+
+  async function fetchNextPosts() {
+    const response = await axios.get(next)
+    const data = response.data
+    setPosts((prev) => merge(prev, data.results))
+    setNext(data.next)
   }
 
   async function editPost(id, post) {
@@ -28,20 +38,19 @@ export default function MainPage() {
       title: post.title,
       content: post.content
     }
-
     try {
-      await axios.patch(`${CODELAP_URL}${id}/`, body);
-      await getPosts()
+      await axios.patch(`${CODELAP_URL}${id}/`, body)
+      await fetchPosts()
     } catch (err) {
       console.log("error when editing post", err)
     }
   }
 
-  async function createPost(post) {
+  async function createPost(newPost) {
     try {
-      const body = { ...post, username }
+      const body = { ...newPost, username }
       await axios.post(CODELAP_URL, body)
-      await getPosts()
+      await fetchPosts()
     } catch (err) {
       console.log(err)
     }
@@ -49,8 +58,8 @@ export default function MainPage() {
 
   async function deletePost(id) {
     try {
-      await axios.delete(`${CODELAP_URL}${id}/`);
-      await getPosts()
+      await axios.delete(`${CODELAP_URL}${id}/`)
+      await fetchPosts()
     } catch (err) {
       console.log("error when deleting post", err)
     }
@@ -60,22 +69,14 @@ export default function MainPage() {
     <>
       <Header />
       <PostForm onSubmit={createPost} />
-      {
-        posts.map((post) => (
-          <Post
-            key={post.id}
-            postId={post.id}
-            username={post.username}
-            title={post.title}
-            content={post.content}
-            createdAt={post.created_datetime}
-            canDelete={post.username === username ? "true" : "false"}
-            onDelete={deletePost}
-            canEdit={post.username === username ? "true" : "false"}
-            onEdit={editPost}
-          />
-        ))
-      }
+      <Timeline
+        username={username}
+        posts={posts}
+        next={next}
+        fetchNext={fetchNextPosts}
+        onDelete={deletePost}
+        onEdit={editPost}
+      />
     </>
   )
 };

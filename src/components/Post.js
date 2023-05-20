@@ -2,27 +2,9 @@ import { useState } from "react";
 import styled from "styled-components";
 import Modal from '../components/Modal'
 import dayjs from 'dayjs';
-import updateLocale from 'dayjs/plugin/updateLocale';
-import 'dayjs/locale/en'
+import relativeTime from 'dayjs/plugin/relativeTime'
 
-dayjs.extend(updateLocale);
-dayjs.updateLocale('en', {
-  relativeTime: {
-    future: "in %s",
-    past: "%s ago",
-    s: 'a few seconds',
-    m: "a minute",
-    mm: "%d minutes",
-    h: "1 hour",
-    hh: "%d hours",
-    d: "a day",
-    dd: "%d days",
-    M: "a month",
-    MM: "%d months",
-    y: "a year",
-    yy: "%d years"
-  }
-});
+dayjs.extend(relativeTime)
 
 export default function Post(props) {
   const [openEditModal, setOpenEditModal] = useState("false")
