@@ -95,8 +95,7 @@ export default function Post(props) {
 const Form = styled.form`
  display: flex;
  flex-direction: column;
-`;
-
+`
 const Box = styled.div`
  width: 752px;
  height: 334px;
@@ -107,6 +106,8 @@ const Box = styled.div`
  border: 1px solid #999999;
  border-radius: 16px;
  box-sizing: border-box;
+ word-wrap: break-word;
+ overflow: auto;
 `
 const HeaderLayout = styled.div`
   width:752px;

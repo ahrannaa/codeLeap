@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { selectUser } from '../redux/userSlice'
 import PostForm from "../components/PostForm";
 import Timeline from "../components/Timeline";
-import { merge } from "../utils/utils"
 
 const CODELAP_URL = "https://dev.codeleap.co.uk/careers/"
 const POSTS_LIMIT = 10
@@ -27,10 +26,12 @@ export default function MainPage() {
   }
 
   async function fetchNextPosts() {
-    const response = await axios.get(next)
-    const data = response.data
-    setPosts((prev) => merge(prev, data.results))
-    setNext(data.next)
+    if (next) {
+      const response = await axios.get(next)
+      const data = response.data
+      setPosts((prev) => [...prev, ...data.results])
+      setNext(data.next)
+    }
   }
 
   async function editPost(id, post) {
@@ -72,7 +73,6 @@ export default function MainPage() {
       <Timeline
         username={username}
         posts={posts}
-        next={next}
         fetchNext={fetchNextPosts}
         onDelete={deletePost}
         onEdit={editPost}

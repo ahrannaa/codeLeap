@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { useState } from "react"
 
-export default function PostForm(props) {
+export default function PostForm({ onSubmit }) {
   const [post, setPost] = useState({ title: "", content: "" })
 
   function handlePost(e) {
@@ -11,7 +11,7 @@ export default function PostForm(props) {
 
   function submitForm(e) {
     e.preventDefault()
-    props.onSubmit(post)
+    onSubmit(post)
     setPost({ title: "", content: "" })
   }
 

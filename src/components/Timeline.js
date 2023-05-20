@@ -1,22 +1,20 @@
 import React, { useEffect } from 'react'
 import Post from "../components/Post"
 
-export default function Timeline({ posts, next, onEdit, onDelete, fetchNext, username }) {
-
+export default function Timeline({ posts, onEdit, onDelete, fetchNext, username }) {
   useEffect(() => {
     function onScroll() {
       const scrollTop = document.documentElement.scrollTop
       const scrollHeight = document.documentElement.scrollHeight
       const clientHeight = document.documentElement.clientHeight
 
-      if (scrollTop + clientHeight >= scrollHeight && next) {
-        console.log("next: " + next)
+      if (scrollTop + clientHeight >= scrollHeight) {
         fetchNext()
       }
     }
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
-  }, [next, fetchNext])
+  }, [fetchNext])
 
   return (
     <div>
