@@ -10,25 +10,32 @@ export default function SignUpPage() {
   const dispatcher = useDispatch()
   let navigate = useNavigate();
 
-  function modalOnClik() {
+  function submitForm() {
     dispatcher(signup(username))
     navigate('/')
   }
 
   return (
     <Modal isOpen="true" title="Welcome to CodeLeap network!">
-      <InputLabel>Please enter your username</InputLabel>
-      <InputName type="text" value={username}
-        onChange={e => setUsername(e.target.value)}
-        required
-        name="username"
-        placeholder="John doe" />
-      <Box>
-        <ModalButton onClick={modalOnClik}>ENTER</ModalButton>
-      </Box>
+      <Form onSubmit={submitForm}>
+        <InputLabel>Please enter your username</InputLabel>
+        <InputName type="text" value={username}
+          onChange={e => setUsername(e.target.value)}
+          required
+          name="username"
+          placeholder="John doe" />
+        <Box>
+          <ModalButton type="submit">ENTER</ModalButton>
+        </Box>
+      </Form>
     </Modal>
   )
 }
+
+const Form = styled.form`
+ display: flex;
+ flex-direction: column;
+`;
 
 const InputName = styled.input`
   width: 452px;
@@ -46,7 +53,6 @@ const InputName = styled.input`
 const Box = styled.div`
  display: flex;
  justify-content:end;
- margin-right: 40px;
 `
 const ModalButton = styled.button`
   width: 111px;

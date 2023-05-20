@@ -1,54 +1,40 @@
-import styled from "styled-components";
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { selectUser } from '../redux/userSlice'
-import axios from "axios";
+import styled from "styled-components"
+import { useState } from "react"
 
-export default function CreatePosts(){
-  const [createPost, setCreatePost] = useState({title: "", content: ""})
-  const { name } = useSelector(selectUser)
+export default function PostForm(props) {
+  const [post, setPost] = useState({ title: "", content: "" })
 
   function handlePost(e) {
     const { name, value } = e.target
-    setCreatePost({ ...createPost, [name]: value })
-}
- async function sendPost(e){
-  e.preventDefault()
-  const URL = "https://dev.codeleap.co.uk/careers/"
+    setPost({ ...post, [name]: value })
+  }
 
-  const body = {
-    username: name, 
-    title: createPost.title,
-    content: createPost.content
+  function submitForm(e) {
+    e.preventDefault()
+    props.onSubmit(post)
+    setPost({ title: "", content: "" })
   }
-  
-  try {
-      await axios.post(URL,body )
-   } catch (err) {
-    console.log(err)
-    alert("There was an error publishing")
-  }
-}
+
   return (
     <Box>
-      <Form onSubmit={sendPost}>
-       <Title>What’s on your mind?</Title>
-       <InputWrapper>
-        <Label>Title</Label>
-        <TitleInput 
-         required
-         name="title"
-         value={createPost.title}
-         onChange={handlePost}
-         placeholder="Hello World"/>
-        <Label>Content</Label>
-        <ContentInput required
-         name="content"
-         value={createPost.content}
-         onChange={handlePost}
-         placeholder="Content Here"/>
-       </InputWrapper>
-       <Button type="submit">Create</Button>
+      <Form onSubmit={submitForm}>
+        <Title>What’s on your mind?</Title>
+        <InputWrapper>
+          <Label>Title</Label>
+          <TitleInput
+            required
+            name="title"
+            value={post.title}
+            onChange={handlePost}
+            placeholder="Hello World" />
+          <Label>Content</Label>
+          <ContentInput required
+            name="content"
+            value={post.content}
+            onChange={handlePost}
+            placeholder="Content Here" />
+        </InputWrapper>
+        <Button type="submit">Create</Button>
       </Form>
     </Box>
   );

@@ -10,10 +10,25 @@ export default function Post(props) {
     content: "",
   })
 
-  async function edit() {
+  function isNotBlank(value) {
+    return value.trim() !== ""
+  }
+
+  async function submitEdit(e) {
+    e.preventDefault()
+    if (isNotBlank(post.title) && isNotBlank(post.content)) {
+      try {
+        await props.onEdit(props.postId, post)
+        setOpenEditModal("false")
+      } catch (error) {
+        throw error
+      }
+    }
+  }
+  async function deletePost() {
     try {
-      await props.onEdit(props.postId, post)
-      setOpenEditModal("false")
+      await props.onDelete(props.postId)
+      setOpenRemoveModal("false")
     } catch (error) {
       throw error
     }
@@ -24,35 +39,37 @@ export default function Post(props) {
         <p>{props.title}</p>
         <div>
           {
-            props.canRemove === "true" ? <ion-icon onClick={() => { setOpenRemoveModal("true") }} name="trash-bin-outline"></ion-icon> : <></>
+            props.canDelete === "true" ? <ion-icon onClick={() => { setOpenRemoveModal("true") }} name="trash-bin-outline"></ion-icon> : <></>
           }
           {
             props.canEdit === "true" ? <ion-icon onClick={() => { setOpenEditModal("true") }} name="create-outline"></ion-icon> : <></>
           }
           <Modal isOpen={openEditModal} title="Edit item">
-            <InputWrapper>
-              <Label>Title</Label>
-              <TitleInput
-                onChange={e => setPost({ ...post, title: e.target.value })}
-                required
-                name="title"
-                placeholder="Hello World" />
-              <Label>Content</Label>
-              <ContentInput
-                onChange={e => setPost({ ...post, content: e.target.value })}
-                required
-                name="content"
-                placeholder="Content Here" />
-            </InputWrapper>
-            <BoxButton>
-              <ButtonRed onClick={() => { setOpenEditModal("false") }}>Cancel</ButtonRed>
-              <ButtonGreen onClick={edit}>Save</ButtonGreen>
-            </BoxButton>
+            <Form onSubmit={submitEdit}>
+              <InputWrapper>
+                <Label>Title</Label>
+                <TitleInput
+                  onChange={e => setPost({ ...post, title: e.target.value })}
+                  required
+                  name="title"
+                  placeholder="Hello World" />
+                <Label>Content</Label>
+                <ContentInput
+                  onChange={e => setPost({ ...post, content: e.target.value })}
+                  required
+                  name="content"
+                  placeholder="Content Here" />
+              </InputWrapper>
+              <BoxButton>
+                <ButtonRed onClick={() => { setOpenEditModal("false") }}>Cancel</ButtonRed>
+                <ButtonGreen type="submit">Save</ButtonGreen>
+              </BoxButton>
+            </Form>
           </Modal>
           <Modal isOpen={openRemoveModal} title="Are you sure you want to delete this item? ">
             <BoxButton>
-              <ButtonGreen onClick={() => {setOpenRemoveModal("false") }}>Cancel</ButtonGreen>
-              <ButtonRed>Delete</ButtonRed>
+              <ButtonGreen onClick={() => { setOpenRemoveModal("false") }}>Cancel</ButtonGreen>
+              <ButtonRed onClick={deletePost}>Delete</ButtonRed>
             </BoxButton>
           </Modal>
         </div>
@@ -65,6 +82,11 @@ export default function Post(props) {
     </Box>
   )
 }
+
+const Form = styled.form`
+ display: flex;
+ flex-direction: column;
+`;
 
 const Box = styled.div`
  width: 752px;
