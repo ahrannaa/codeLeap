@@ -4,14 +4,19 @@ import styled from "styled-components"
 
 ReactModal.setAppElement('#root');
 
-export default function Modal(props) {
-  const isOpen = props.isOpen === "true"
+export default function Modal({ isOpen, applyOverlay, title, children }) {
+  const shouldApplyOverlayStyle = applyOverlay === "true";
+
   return (
     <ReactModal
-      isOpen={isOpen}
+      isOpen={isOpen === "true"}
       style={{
+        overlay: shouldApplyOverlayStyle ? {
+          background: "rgba(119, 119, 119, 0.8)",
+          zIndex: 9999,
+        } : {},
         content: {
-          background: " #FFFFFF",
+          background: "#FFFFFF",
           borderRadius: "16px",
           borderSizing: "border-box",
           top: "50%",
@@ -23,10 +28,10 @@ export default function Modal(props) {
         }
       }}
     >
-      <ModalTitle>{props.title}</ModalTitle>
-      {props.children}
+      <ModalTitle>{title}</ModalTitle>
+      {children}
     </ReactModal>
-  )
+  );
 }
 
 const ModalTitle = styled.h2`
@@ -35,4 +40,4 @@ const ModalTitle = styled.h2`
   font-size: 22px;
   font-weight: 700;
   display: flex;
-`
+`;

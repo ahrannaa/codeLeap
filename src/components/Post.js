@@ -51,7 +51,7 @@ export default function Post(props) {
           {
             props.canEdit === "true" ? <ion-icon onClick={() => { setOpenEditModal("true") }} name="create-outline"></ion-icon> : <></>
           }
-          <Modal isOpen={openEditModal} title="Edit item">
+          <Modal isOpen={openEditModal} applyOverlay="true" title="Edit item">
             <Form onSubmit={submitEdit}>
               <InputWrapper>
                 <Label>Title</Label>
@@ -75,7 +75,7 @@ export default function Post(props) {
               </BoxButton>
             </Form>
           </Modal>
-          <Modal isOpen={openRemoveModal} title="Are you sure you want to delete this item? ">
+          <Modal isOpen={openRemoveModal} applyOverlay="true" title="Are you sure you want to delete this item? ">
             <BoxButton>
               <ButtonGreen onClick={() => { setOpenRemoveModal("false") }}>Cancel</ButtonGreen>
               <ButtonRed onClick={deletePost}>Delete</ButtonRed>
